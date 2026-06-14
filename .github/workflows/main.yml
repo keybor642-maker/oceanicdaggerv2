@@ -1,27 +1,33 @@
-[INFO] /home/runner/work/oceanicdaggers/oceanicdaggers/src/main/java/mc/mkay/oceanicdaggers/DaggerItems.java: Recompile with -Xlint:deprecation for details.
-[INFO] -------------------------------------------------------------
-Error:  COMPILATION ERROR : 
-[INFO] -------------------------------------------------------------
-Error:  /home/runner/work/oceanicdaggers/oceanicdaggers/src/main/java/mc/mkay/oceanicdaggers/DaggerListener.java:[127,73] cannot find symbol
-  symbol:   variable THIRD_PERSON_RIGHT_HAND
-  location: class org.bukkit.entity.ItemDisplay.ItemDisplayTransform
-[INFO] 1 error
-[INFO] -------------------------------------------------------------
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  20.200 s
-[INFO] Finished at: 2026-06-14T03:01:11Z
-[INFO] ------------------------------------------------------------------------
-Error:  Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project OceanicDaggers: Compilation failure
-Error:  /home/runner/work/oceanicdaggers/oceanicdaggers/src/main/java/mc/mkay/oceanicdaggers/DaggerListener.java:[127,73] cannot find symbol
-Error:    symbol:   variable THIRD_PERSON_RIGHT_HAND
-Error:    location: class org.bukkit.entity.ItemDisplay.ItemDisplayTransform
-Error:  -> [Help 1]
-Error:  
-Error:  To see the full stack trace of the errors, re-run Maven with the -e switch.
-Error:  Re-run Maven using the -X switch to enable full debug logging.
-Error:  
-Error:  For more information about the errors and possible solutions, please read the following articles:
-Error:  [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
-Error: Process completed with exit code 1.
+name: Build OceanicDaggers
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn clean package -B
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: OceanicDaggers
+          path: target/OceanicDaggers.jar
+          retention-days: 30
